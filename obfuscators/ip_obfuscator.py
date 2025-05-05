@@ -4,7 +4,8 @@
 import sys
 import random
 
-def convert_to_octects(ip: str):
+
+def convert_to_octects(ip: str) -> list[str]:
     """
     Splits an IPv4 address into its octets.
 
@@ -22,7 +23,7 @@ def convert_to_octects(ip: str):
     return octets
 
 
-def convert_to_hex(octets: list) -> str:
+def convert_to_hex(octets: list[str]) -> str:
     """
     Converts IPv4 octets to a hexadecimal representation.
 
@@ -35,7 +36,7 @@ def convert_to_hex(octets: list) -> str:
     return "".join([f"{int(o):02x}" for o in octets])
 
 
-def convert_to_octal(octets: list) -> str:
+def convert_to_octal(octets: list[str]) -> str:
     """
     Converts IPv4 octets to an octal representation.
 
@@ -48,7 +49,7 @@ def convert_to_octal(octets: list) -> str:
     return ".".join([f"{int(o):03o}" for o in octets])
 
 
-def convert_to_binary(octets: list) -> str:
+def convert_to_binary(octets: list[str]) -> str:
     """
     Converts IPv4 octets to a binary representation.
 
@@ -61,7 +62,7 @@ def convert_to_binary(octets: list) -> str:
     return ".".join([f"{int(o):08b}" for o in octets])
 
 
-def convert_to_ipv6(octets: list) -> str:
+def convert_to_ipv6(octets: list[str]) -> str:
     """
     Converts an IPv4 address (provided as octets) to an IPv6 mapped address.
 
@@ -80,7 +81,7 @@ def convert_to_ipv6(octets: list) -> str:
     return f"::ffff:{segment1}:{segment2}"
 
 
-def add_random_padding(ip: str) -> str:
+def add_random_padding(octets: list[str]) -> str:
     """
     Adds random leading zero padding to each octet of the IP address.
     For each octet, a random number (0 to 3) of zeros is prepended.
@@ -91,7 +92,6 @@ def add_random_padding(ip: str) -> str:
     Returns:
         str: The padded IPv4 address.
     """
-    octets = convert_to_octects(ip)
     padded_octets = []
     for o in octets:
         zeros = "0" * random.randint(0, 3)
@@ -99,7 +99,7 @@ def add_random_padding(ip: str) -> str:
     return ".".join(padded_octets)
 
 
-def obfuscate_random_octet(ip: str) -> str:
+def obfuscate_random_octet(octets: list[str]) -> str:
     """
     Obfuscates one random octet of the IP address using one of the available representations:
     hexadecimal, octal, or binary.
@@ -110,7 +110,6 @@ def obfuscate_random_octet(ip: str) -> str:
     Returns:
         str: The IPv4 address with one octet obfuscated.
     """
-    octets = convert_to_octects(ip)
     index = random.randint(0, 3)
     representation = random.choice(["hex", "octal", "binary"])
     original_oct = octets[index]
@@ -124,7 +123,7 @@ def obfuscate_random_octet(ip: str) -> str:
     return ".".join(octets)
 
 
-def remove_extra_zeros(ip: str) -> str:
+def remove_extra_zeros(octets: list[str]) -> str:
     """
     Removes octets that are equal to zero from the IP address.
     E.g., converts "127.0.0.1" to "127.1".
@@ -135,7 +134,6 @@ def remove_extra_zeros(ip: str) -> str:
     Returns:
         str: The shortened IPv4 address.
     """
-    octets = convert_to_octects(ip)
     # Filter out octets that represent 0
     filtered = [o for o in octets if int(o) != 0]
     # In case all octets are 0, return a single 0.
@@ -154,9 +152,9 @@ def main():
         print("Octal:", convert_to_octal(octets))
         print("Binary:", convert_to_binary(octets))
         print("IPv6:", convert_to_ipv6(octets))
-        print("Random Padding:", add_random_padding(ip))
-        print("Obfuscate Random Octet:", obfuscate_random_octet(ip))
-        print("Remove Extra Zeros:", remove_extra_zeros(ip))
+        print("Random Padding:", add_random_padding(octets))
+        print("Obfuscate Random Octet:", obfuscate_random_octet(octets))
+        print("Remove Extra Zeros:", remove_extra_zeros(octets))
     except Exception as e:
         print(e)
         sys.exit(1)
